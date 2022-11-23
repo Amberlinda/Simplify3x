@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from 'react-redux'
 
 const DetailScreen = () => {
 
-    const [userDetails,setUserDetails] = useState([])
+    const userDetails = useSelector((state) => state.userDetails.details)
+
 
     useEffect(() => {
         let userData = AsyncStorage.getItem("userDetails")
@@ -20,9 +22,9 @@ const DetailScreen = () => {
             {
                 userDetails.length !== 0 ? userDetails.map((el,index) => (
                     <View key={index} style={styles.card}>
-                        <Text style={styles.textStyle}>Full name: {}</Text>
-                        <Text style={styles.textStyle}>Email Address: {}</Text>
-                        <Text style={styles.textStyle}>Mobile number: {}</Text>
+                        <Text style={styles.textStyle}>Full name: {el.fullName}</Text>
+                        <Text style={styles.textStyle}>Email Address: {el.emailAddress}</Text>
+                        <Text style={styles.textStyle}>Mobile number: {el.phone}</Text>
                     </View>
                 ))
                 : <Text style={{fontSize:20,textAlign:"center"}}>No data to show</Text>

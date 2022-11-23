@@ -2,17 +2,21 @@ import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { addData } from "../../store/slice/userDetailsSlice";
 import InputFields from "../components/inputFields";
 import Header from "../components/Header";
 import CustomBtn from "../components/customBtn";
+import { useSelector, useDispatch } from 'react-redux'
 
-const FormScreen = () => {
+const FormScreen = ({navigation}) => {
 
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const { control, handleSubmit, formState: { errors }, reset } = useForm();
+
+    const dispatch = useDispatch()
 
     const onSubmit = (data) => {
         console.log(data)
+        dispatch(addData(data))
         let userData = AsyncStorage.getItem("userDetails")
         if(typeof userData === 'string'){
             userData = JSON.parse(userData)
@@ -21,6 +25,8 @@ const FormScreen = () => {
         }
         AsyncStorage.setItem("userDetails",JSON.stringify([data]))
         // console.log(userData)
+        reset()
+        navigation.navigate("detail screen")
     }
 
     return(
