@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet,View, Text, TextInput, Button, TouchableOpacity, ToastAndroid } from 'react-native';
 import InputFields from '../components/inputFields';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Header from '../components/Header';
 import CustomBtn from '../components/customBtn';
+import {getData,storeData} from '../hooks/asyncFuncs'
 
 const LoginScreen = ({navigation}) => {
 
     const [email,setEmail] = useState()
     const [pass,setPass] = useState()
 
+    
+
     const loginHandler = () => {
-        // const sampleEmail = "someemail@gmail.com"
-        const sampleEmail = "a"
-        // const samplePass = "somePass@123"
-        const samplePass = "b"
-        if(email === sampleEmail && samplePass === samplePass){
-            AsyncStorage.setItem("token",pass)
+        const sampleEmail = "someemail@gmail.com"
+        const samplePass = "somePass@123"
+        if(email === sampleEmail && pass === samplePass){
+            storeData("token",pass)
             navigation.navigate('index')
         }else{
             ToastAndroid.showWithGravityAndOffset(
@@ -30,11 +30,12 @@ const LoginScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        const token = AsyncStorage.getItem("token")
-        console.log(token)
-        if(token && token === "somePass@123"){
-            navigation.navigate("Home")
-        }
+        // getData("token",(value) => {
+        //     console.log(value)
+        //     if(value !== null && value === "somePass@123"){
+        //         navigation.navigate("index")
+        //     }
+        // })
     },[])
 
     return(

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addData } from "../../store/slice/userDetailsSlice";
@@ -7,6 +7,8 @@ import InputFields from "../components/inputFields";
 import Header from "../components/Header";
 import CustomBtn from "../components/customBtn";
 import { useSelector, useDispatch } from 'react-redux'
+import {getData,storeData} from '../hooks/asyncFuncs'
+
 
 const FormScreen = ({navigation}) => {
 
@@ -14,23 +16,24 @@ const FormScreen = ({navigation}) => {
 
     const dispatch = useDispatch()
 
+    
+
     const onSubmit = (data) => {
-        console.log(data)
         dispatch(addData(data))
-        let userData = AsyncStorage.getItem("userDetails")
-        if(typeof userData === 'string'){
-            userData = JSON.parse(userData)
-            userData.push(data)
-            return
-        }
-        AsyncStorage.setItem("userDetails",JSON.stringify([data]))
-        // console.log(userData)
+        getData("userDetails",(details) => {
+            if(details !== null){
+                const userDetails = JSON.parse(details)
+                userDetails.push(data)
+                storeData("userDetails",JSON.stringify(userDetails))
+            }
+        })
+       
         reset()
         navigation.navigate("detail screen")
     }
 
     return(
-        <View style={styles.container}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps='handled'>
             <Header>Add details</Header>
             
             {errors.fullName && <Text style={{color:"red"}}>This is required.</Text>}
@@ -93,7 +96,7 @@ const FormScreen = ({navigation}) => {
                 text="Submit" 
                 loginHandler={handleSubmit(onSubmit)} 
             />
-        </View>
+        </ScrollView>
     )
 }
 

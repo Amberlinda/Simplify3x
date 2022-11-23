@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import BarChartCont from '../components/barChartCont'
 import PieChartCont from '../components/pieChartCont'
+import { useSelector, useDispatch } from 'react-redux'
+import {getData,storeData} from '../hooks/asyncFuncs'
+import { loadData } from "../../store/slice/userDetailsSlice";
 
 const HomeScreen = () => {
+
+    const dispatch = useDispatch()
 
     const [pieChartData,setPieChartData] = useState([
         { x: "Cats", y: 35 },
@@ -17,6 +22,15 @@ const HomeScreen = () => {
         {quarter: 3, earnings: 14250},
         {quarter: 4, earnings: 19000}
         ])
+
+    useEffect(() => {
+        getData("userDetails",(data) => {
+            if(data !== null){
+                console.log(JSON.parse(data))
+                dispatch(loadData(JSON.parse(data)))
+            }
+        })
+    },[])
 
     return(
         <ScrollView style={styles.container}>

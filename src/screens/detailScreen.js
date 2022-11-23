@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector, useDispatch } from 'react-redux'
 
 const DetailScreen = () => {
 
     const userDetails = useSelector((state) => state.userDetails.details)
-
-
-    useEffect(() => {
-        let userData = AsyncStorage.getItem("userDetails")
-        console.log(userData)
-        if(typeof userData === 'string'){
-            userData = JSON.parse(userData)
-            setUserDetails(userData)
-        }
-    },[])
 
     return(
         <ScrollView style={styles.container}>
